@@ -1,0 +1,281 @@
+{
+  "_package": {
+    "name": "finance-opc-agent-pack",
+    "mode": "incremental-import",
+    "version": "2.1",
+    "description": "Financial Trading Multi-Agent System - Optimized Interaction Flow"
+  },
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "__PACKAGE_ROOT__/workspace/skills"
+      ]
+    },
+    "autoLoad": [
+      "shared/eastmoney_api",
+      "shared/technical_analysis",
+      "shared/risk_management",
+      "shared/market_monitoring",
+      "shared/data_processing"
+    ]
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "__PACKAGE_ROOT__/workspace",
+      "memorySearch": {
+        "enabled": true
+      },
+      "subagents": {
+        "maxChildrenPerAgent": 4,
+        "maxSpawnDepth": 2,
+        "runTimeoutSeconds": 1200
+      }
+    },
+    "list": [
+      {
+        "id": "finance_main",
+        "workspace": "__PACKAGE_ROOT__/workspace",
+        "identity": {
+          "name": "F01 Financial Commander",
+          "emoji": "F01",
+          "role": "commander"
+        },
+        "tools": {
+          "profile": "messaging",
+          "alsoAllow": [
+            "read",
+            "write",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_data",
+            "finance_analysis",
+            "finance_trading",
+            "finance_monitor"
+          ]
+        },
+        "system": {
+          "independent": true,
+          "noUserConfigOverride": true
+        }
+      },
+      {
+        "id": "finance_data",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_data",
+        "identity": {
+          "name": "F02 Data Collector",
+          "emoji": "F02",
+          "role": "data_provider"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        },
+        "system": {
+          "independent": true,
+          "noUserConfigOverride": true
+        }
+      },
+      {
+        "id": "finance_analysis",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_analysis",
+        "identity": {
+          "name": "F03 Market Analyst",
+          "emoji": "F03",
+          "role": "analyst"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_data"
+          ]
+        },
+        "system": {
+          "independent": true,
+          "noUserConfigOverride": true
+        }
+      },
+      {
+        "id": "finance_trading",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_trading",
+        "identity": {
+          "name": "F04 Trading Executor",
+          "emoji": "F04",
+          "role": "executor"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_monitor"
+          ]
+        },
+        "system": {
+          "independent": true,
+          "noUserConfigOverride": true
+        }
+      },
+      {
+        "id": "finance_monitor",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_monitor",
+        "identity": {
+          "name": "F05 Market Monitor",
+          "emoji": "F05",
+          "role": "monitor"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_main"
+          ]
+        },
+        "system": {
+          "independent": true,
+          "noUserConfigOverride": true
+        }
+      }
+    ]
+  },
+  "workflows": {
+    "standard_trading_flow": {
+      "steps": [
+        {
+          "agent": "finance_monitor",
+          "action": "monitor_market",
+          "trigger": "opportunity_or_risk",
+          "next": "finance_main"
+        },
+        {
+          "agent": "finance_main",
+          "action": "assess_situation",
+          "decision": "needs_analysis",
+          "next": "finance_analysis"
+        },
+        {
+          "agent": "finance_analysis",
+          "action": "analyze_and_request_data",
+          "data_request": "finance_data",
+          "next": "finance_main"
+        },
+        {
+          "agent": "finance_main",
+          "action": "make_decision",
+          "considerations": [
+            "risk_assessment",
+            "position_limits",
+            "market_conditions"
+          ],
+          "next": "finance_trading"
+        },
+        {
+          "agent": "finance_trading",
+          "action": "execute_trade",
+          "report_to": "finance_monitor",
+          "confirmation": "required",
+          "next": "finance_main"
+        },
+        {
+          "agent": "finance_main",
+          "action": "verify_execution",
+          "next": "finance_monitor"
+        },
+        {
+          "agent": "finance_monitor",
+          "action": "monitor_position",
+          "ongoing": true
+        }
+      ]
+    },
+    "emergency_stop_flow": {
+      "trigger": "critical_risk",
+      "steps": [
+        {
+          "agent": "finance_monitor",
+          "action": "detect_emergency",
+          "escalate": "finance_main"
+        },
+        {
+          "agent": "finance_main",
+          "action": "emergency_stop",
+          "override": true,
+          "next": "finance_trading"
+        },
+        {
+          "agent": "finance_trading",
+          "action": "immediate_close_all",
+          "confirmation": "not_required"
+        }
+      ]
+    }
+  },
+  "safety_protocols": {
+    "decision_chain": "strict",
+    "no_bypass_allowed": true,
+    "emergency_protocols": "active",
+    "audit_trail": "comprehensive",
+    "risk_limits": "enforced",
+    "interaction_rules": {
+      "F03_purpose": "analysis_only",
+      "F03_can_call": ["finance_data"],
+      "F03_cannot_call": ["finance_trading"],
+      "F04_purpose": "execution_only",
+      "F04_can_call": ["finance_monitor"],
+      "F04_cannot_call": ["finance_analysis", "finance_data"]
+    }
+  }
+}

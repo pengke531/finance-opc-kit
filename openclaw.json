@@ -1,0 +1,39 @@
+{
+  "_package": {
+    "name": "finance-opc-agent-pack",
+    "mode": "incremental-import",
+    "version": "1.0"
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "__DOMAIN_ROOT__/workspace",
+      "memorySearch": {"enabled": true},
+      "subagents": {
+        "maxChildrenPerAgent": 4,
+        "maxSpawnDepth": 2,
+        "runTimeoutSeconds": 1200
+      }
+    },
+    "list": [
+      {
+        "id": "finance_main",
+        "identity": {"name": "F01 Financial Commander", "emoji": "F01"},
+        "tools": {
+          "profile": "messaging",
+          "alsoAllow": ["read", "write", "sessions_spawn", "subagents", "memory_search", "memory_get", "memory_store", "web_search", "web_fetch", "browser", "agents_list", "tts", "exec"],
+          "exec": {
+            "host": "gateway",
+            "security": "full",
+            "ask": "off",
+            "safeBins": ["pwsh", "bash", "sh", "python", "python3"],
+            "strictInlineEval": true,
+            "timeoutSec": 300
+          }
+        },
+        "subagents": {
+          "allowAgents": ["finance_data", "finance_analysis", "finance_trading", "finance_monitor"]
+        }
+      }
+    ]
+  }
+}
