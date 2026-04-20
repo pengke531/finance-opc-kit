@@ -4,9 +4,25 @@
 
 ## ⚡ 快速开始
 
-```bash
+### 🪟 Windows用户
+
+```powershell
+# 1. 克隆项目
 git clone https://github.com/pengke531/finance-opc-kit.git
 cd finance-opc-kit
+
+# 2. 运行安装脚本
+powershell -ExecutionPolicy Bypass -File .\install-finance-opc.ps1
+```
+
+### 🍎 macOS/Linux用户
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/pengke531/finance-opc-kit.git
+cd finance-opc-kit
+
+# 2. 运行安装脚本
 chmod +x install.sh
 ./install.sh
 ```
@@ -40,10 +56,18 @@ chmod +x install.sh
 
 ## 🔄 卸载
 
-如需卸载，安装脚本会自动创建备份文件，恢复即可：
+### Windows
+```powershell
+# 查找备份文件
+dir $env:USERPROFILE\.openclaw\openclaw.json.backup-finance-*
 
+# 恢复最新备份
+cp $env:USERPROFILE\.openclaw\openclaw.json.backup-finance-最新时间 $env:USERPROFILE\.openclaw\openclaw.json
+```
+
+### macOS/Linux
 ```bash
-# 备份文件位置: ~/.openclaw/openclaw.json.backup-finance-*
+# 恢复备份
 cp ~/.openclaw/openclaw.json.backup-finance-* ~/.openclaw/openclaw.json
 ```
 
