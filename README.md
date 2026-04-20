@@ -7,22 +7,16 @@
 ### 🪟 Windows用户
 
 ```powershell
-# 1. 克隆项目
 git clone https://github.com/pengke531/finance-opc-kit.git
 cd finance-opc-kit
-
-# 2. 运行安装脚本
 powershell -ExecutionPolicy Bypass -File .\install-finance-opc.ps1
 ```
 
 ### 🍎 macOS/Linux用户
 
 ```bash
-# 1. 克隆项目
 git clone https://github.com/pengke531/finance-opc-kit.git
 cd finance-opc-kit
-
-# 2. 运行安装脚本
 chmod +x install.sh
 ./install.sh
 ```
@@ -58,28 +52,36 @@ chmod +x install.sh
 
 ### Windows
 ```powershell
-# 查找备份文件
-dir $env:USERPROFILE\.openclaw\openclaw.json.backup-finance-*
+# 删除Agent目录
+Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\agents\finance_*
 
-# 恢复最新备份
-cp $env:USERPROFILE\.openclaw\openclaw.json.backup-finance-最新时间 $env:USERPROFILE\.openclaw\openclaw.json
+# 或者使用备份恢复（如果有）
+dir $env:USERPROFILE\.openclaw\openclaw.json.backup-*
 ```
 
 ### macOS/Linux
 ```bash
-# 恢复备份
-cp ~/.openclaw/openclaw.json.backup-finance-* ~/.openclaw/openclaw.json
+# 删除Agent目录
+rm -rf ~/.openclaw/agents/finance_*
+
+# 或者使用备份恢复（如果有）
+ls ~/.openclaw/openclaw.json.backup-finance-*
 ```
 
 ## 📚 文档
 
 - [USER_GUIDE.md](USER_GUIDE.md) - 完整使用指南
 - [FAULT_TOLERANCE.md](FAULT_TOLERANCE.md) - 容错机制说明
-- [AGENT_INTERACTION_ANALYSIS.md](AGENT_INTERACTION_ANALYSIS.md) - Agent交互分析
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - 故障排除指南
 
 ## ⚠️ 重要提醒
 
 本系统仅供教育研究使用，实际交易请谨慎操作并遵守相关法规。
+
+## 💬 问题反馈
+
+如遇到安装问题，请提交Issue：
+https://github.com/pengke531/finance-opc-kit/issues
 
 ---
 
