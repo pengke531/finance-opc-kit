@@ -56,14 +56,6 @@ def main() -> int:
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
 
-    env_template_src = package_root / ".env.template"
-    env_template_dst = domain_root / ".env.template"
-    env_dst = domain_root / ".env"
-    if env_template_src.exists():
-        shutil.copy2(env_template_src, env_template_dst)
-        if not env_dst.exists():
-            shutil.copy2(env_template_src, env_dst)
-
     overlay = json.loads((package_root / "openclaw.json").read_text(encoding="utf-8"))
     overlay = rewrite(overlay, domain_root, target_root)
 

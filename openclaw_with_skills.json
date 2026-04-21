@@ -1,0 +1,200 @@
+{
+  "_package": {
+    "name": "finance-opc-agent-pack",
+    "mode": "incremental-import",
+    "version": "2.0",
+    "description": "Financial Trading Multi-Agent System with Complete Skills Configuration"
+  },
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "__PACKAGE_ROOT__/workspace/skills"
+      ]
+    },
+    "autoLoad": [
+      "shared/eastmoney_api",
+      "shared/technical_analysis", 
+      "shared/risk_management",
+      "shared/market_monitoring",
+      "shared/data_processing"
+    ]
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "__PACKAGE_ROOT__/workspace",
+      "memorySearch": {
+        "enabled": true
+      },
+      "subagents": {
+        "maxChildrenPerAgent": 4,
+        "maxSpawnDepth": 2,
+        "runTimeoutSeconds": 1200
+      }
+    },
+    "list": [
+      {
+        "id": "finance_main",
+        "workspace": "__PACKAGE_ROOT__/workspace",
+        "identity": {
+          "name": "F01 Financial Commander",
+          "emoji": "F01",
+          "role": "commander"
+        },
+        "tools": {
+          "profile": "messaging",
+          "alsoAllow": [
+            "read",
+            "write", 
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_data",
+            "finance_analysis",
+            "finance_trading",
+            "finance_monitor"
+          ]
+        },
+        "skills": [
+          "risk_management",
+          "decision_framework"
+        ]
+      },
+      {
+        "id": "finance_data",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_data",
+        "identity": {
+          "name": "F02 Data Collector",
+          "emoji": "F02",
+          "role": "data_provider"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get", 
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        },
+        "skills": [
+          "eastmoney_api",
+          "data_processing",
+          "data_storage"
+        ]
+      },
+      {
+        "id": "finance_analysis",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_analysis",
+        "identity": {
+          "name": "F03 Market Analyst",
+          "emoji": "F03",
+          "role": "analyst"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store", 
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        },
+        "skills": [
+          "technical_analysis",
+          "fundamental_analysis",
+          "data_processing"
+        ]
+      },
+      {
+        "id": "finance_trading",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_trading",
+        "identity": {
+          "name": "F04 Trading Executor",
+          "emoji": "F04",
+          "role": "executor"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        },
+        "skills": [
+          "risk_management",
+          "order_execution",
+          "position_management"
+        ]
+      },
+      {
+        "id": "finance_monitor",
+        "workspace": "__PACKAGE_ROOT__/agents/finance_monitor",
+        "identity": {
+          "name": "F05 Market Monitor",
+          "emoji": "F05",
+          "role": "monitor"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search", 
+            "web_fetch",
+            "browser"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_main"
+          ]
+        },
+        "skills": [
+          "market_monitoring",
+          "eastmoney_api",
+          "alert_system"
+        ]
+      }
+    ]
+  },
+  "safety": {
+    "isolation": "package",
+    "noUserConfigModification": true,
+    "noGatewayModification": true,
+    "rollbackOnError": true
+  }
+}

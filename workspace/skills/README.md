@@ -6,12 +6,14 @@
 
 ```
 skills/
-└── shared/
-    ├── data_processing/
-    ├── eastmoney_api/
-    ├── market_monitoring/
-    ├── risk_management/
-    └── technical_analysis/
+├── shared/              # 共享skills
+│   ├── data_fetching/   # 数据获取skills
+│   ├── analysis/        # 分析skills
+│   └── utils/           # 工具skills
+├── finance_data/        # F02专用skills
+├── finance_analysis/    # F03专用skills
+├── finance_trading/     # F04专用skills
+└── finance_monitor/     # F05专用skills
 ```
 
 ## Skills加载机制
@@ -22,7 +24,7 @@ skills/
   "skills": {
     "load": {
       "extraDirs": [
-        "__DOMAIN_ROOT__/workspace/skills/shared"
+        "__PACKAGE_ROOT__/workspace/skills"
       ]
     }
   }
@@ -31,8 +33,8 @@ skills/
 
 ## Skills使用说明
 
-各 Agent 通过共享 skills 获取能力：
-- F02: 行情获取、数据处理
-- F03: 技术分析、风险评估
-- F04: 执行前风险约束与状态确认
-- F05: 行情监控与告警逻辑
+每个Agent可以根据需要调用相应的skills：
+- F02: 数据获取和处理skills
+- F03: 技术分析和基本面分析skills  
+- F04: 交易执行和风险控制skills
+- F05: 监控和告警skills

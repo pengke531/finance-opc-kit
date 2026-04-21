@@ -70,8 +70,7 @@ chmod +x install.sh
 1. 把当前仓库内容复制到 `~/.openclaw/domains/finance-opc`
 2. 将本项目的 Agent 配置增量合并到用户现有 `openclaw.json`
 3. 自动备份原有配置
-4. 创建 `domains/finance-opc/.env.template`，首次安装时自动生成 `.env`
-5. 运行 `openclaw config validate` 做一次校验
+4. 运行 `openclaw config validate` 做一次校验
 
 ## 3. 安装后如何确认成功
 
@@ -105,18 +104,6 @@ openclaw config validate
 
 - 如果这里显示 `Config valid`，说明 finance 包和当前宿主配置都没有明显结构问题。
 - 如果这里报错，但安装脚本已经提示 “profile imported”，那通常表示 finance 包已导入成功，只是宿主原有配置中还存在别的 channel / plugin 脏项，需要单独修复。
-
-安装完成后，您还会在下面位置看到交易控制模板文件：
-
-```text
-~/.openclaw/domains/finance-opc/.env
-```
-
-这里可以调整：
-
-- `TRADING_ENABLED`
-- `TRADING_MODE`
-- `EMERGENCY_STOP`
 
 ## 4. 首次启用流程
 
