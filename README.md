@@ -63,7 +63,17 @@ chmod +x install.sh
 @finance_main 设置交易权限为模拟模式
 ```
 
-更完整的安装后启用流程、CLI 调用方法、客户交付验收方式，请查看 [USER_GUIDE.md](USER_GUIDE.md)。
+如果您要交付给其他 OpenClaw 用户，推荐让对方严格按下面流程验收：
+
+1. 导入仓库或运行安装脚本
+2. 重启 OpenClaw
+3. 新建一个会话
+4. 输入 `@finance_main 你好`
+5. 再输入 `@finance_main 分析一下平安银行`
+
+如果第 5 步能稳定返回分析结果，就说明 Agent 已成功加载并能正常调用。
+
+更完整的安装后启用流程、环境配置、交易控制、CLI 调用方法、客户交付验收方式，请查看 [USER_GUIDE.md](USER_GUIDE.md)。
 
 ## 🛡️ 安全特性
 
@@ -78,20 +88,20 @@ chmod +x install.sh
 
 ### Windows
 ```powershell
-# 删除Agent目录
-Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\agents\finance_*
+# 删除域目录
+Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\domains\finance-opc
 
-# 或者使用备份恢复（如果有）
-dir $env:USERPROFILE\.openclaw\openclaw.json.backup-*
+# 或者使用安装时生成的备份恢复 openclaw.json
+dir $env:USERPROFILE\.openclaw\openclaw.json.finance-opc-backup.*
 ```
 
 ### macOS/Linux
 ```bash
-# 删除Agent目录
-rm -rf ~/.openclaw/agents/finance_*
+# 删除域目录
+rm -rf ~/.openclaw/domains/finance-opc
 
-# 或者使用备份恢复（如果有）
-ls ~/.openclaw/openclaw.json.backup-finance-*
+# 或者使用安装时生成的备份恢复 openclaw.json
+ls ~/.openclaw/openclaw.json.finance-opc-backup.*
 ```
 
 ## 📚 文档

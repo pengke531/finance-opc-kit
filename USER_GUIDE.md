@@ -70,7 +70,24 @@ chmod +x install.sh
 1. 把当前仓库内容复制到 `~/.openclaw/domains/finance-opc`
 2. 将本项目的 Agent 配置增量合并到用户现有 `openclaw.json`
 3. 自动备份原有配置
-4. 运行 `openclaw config validate` 做一次校验
+4. 复制 `.env.template` 到域目录，首次安装时自动生成 `.env`
+5. 运行 `openclaw config validate` 做一次校验
+
+### 方式 C：安装到自定义 OpenClaw 目录
+
+如果您不是使用默认的 `~/.openclaw`，也可以指定目标目录。
+
+#### Windows
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-finance-opc.ps1 -TargetRoot "D:\OpenClawProfile"
+```
+
+#### macOS / Linux
+
+```bash
+./install.sh "/opt/openclaw-profile"
+```
 
 ## 3. 安装后如何确认成功
 
@@ -104,6 +121,61 @@ openclaw config validate
 
 - 如果这里显示 `Config valid`，说明 finance 包和当前宿主配置都没有明显结构问题。
 - 如果这里报错，但安装脚本已经提示 “profile imported”，那通常表示 finance 包已导入成功，只是宿主原有配置中还存在别的 channel / plugin 脏项，需要单独修复。
+
+安装后还应确认下面两个路径已出现：
+
+```text
+~/.openclaw/domains/finance-opc/.env
+~/.openclaw/domains/finance-opc/workspace/
+```
+
+其中：
+
+- `.env` 用于控制交易模式和紧急停止
+- `workspace/` 是主 Agent 的完整运行工作区
+
+## 3.1 环境配置与交易控制
+
+安装完成后，建议先看一眼：
+
+```text
+~/.openclaw/domains/finance-opc/.env
+```
+
+默认模板包括：
+
+```dotenv
+TRADING_ENABLED=false
+TRADING_MODE=simulation
+EMERGENCY_STOP=false
+```
+
+建议首次使用保持：
+
+- `TRADING_ENABLED=false`
+- `TRADING_MODE=simulation`
+
+这样可以先验证 Agent 调用和分析链路，不会进入高风险交易状态。
+
+如果您需要日常开关交易控制，可以使用脚本：
+
+```bash
+bash workspace/scripts/trading_control.sh status
+bash workspace/scripts/trading_control.sh enable
+bash workspace/scripts/trading_control.sh disable
+```
+
+说明：
+
+- `status` 查看当前交易状态
+- `enable` 启用交易权限
+- `disable` 禁用交易权限
+
+如果出现异常，需要立即暂停：
+
+```bash
+bash workspace/scripts/trading_control.sh emergency
+```
 
 ## 4. 首次启用流程
 
@@ -154,6 +226,20 @@ openclaw config validate
 2. 按需调用 `finance_data` 获取事实数据
 3. 按需调用 `finance_analysis` 输出技术面 / 风险判断
 4. 最终由 `finance_main` 汇总成用户可读结果
+
+### 第 5 步：再做一次执行层测试
+
+建议继续输入：
+
+```text
+@finance_main 我想用模拟模式买入 000001.SZ，请给我一个分批买入和止损方案
+```
+
+这一步主要验证：
+
+- 主 Agent 能理解“执行规划”类请求
+- `finance_analysis` 与 `finance_trading` 的协作链路可用
+- 返回内容不是空响应或只输出一句泛泛建议
 
 ## 5. CLI 直接调用方法
 
@@ -280,6 +366,50 @@ openclaw agent --agent finance_main --message "分析一下平安银行" --local
 
 这样主 Agent 更容易给出有操作价值的结果。
 
+### 场景 E：先做市场总览，再决定研究方向
+
+示例：
+
+```text
+@finance_main 今天大盘和金融板块怎么看？先给我一个市场综述，再推荐 3 个值得继续研究的方向
+```
+
+这类请求适合每天第一次打开系统时使用，帮助用户快速进入上下文。
+
+## 7.1 推荐给用户的标准提问模板
+
+如果您希望客户更容易用好这个系统，可以直接给他们下面几类模板。
+
+### 模板 1：单标的分析
+
+```text
+@finance_main 分析一下 [股票代码/股票名称]，重点看趋势、风险、建议仓位和关键价位
+```
+
+### 模板 2：执行规划
+
+```text
+@finance_main 我计划买入 [股票代码]，请给我一个更稳妥的分批建仓、止损和止盈方案
+```
+
+### 模板 3：组合复盘
+
+```text
+@finance_main 我现在持有 [标的A]、[标的B]、[标的C]，请按风险、仓位和后续动作给我一个组合复盘
+```
+
+### 模板 4：监控提醒
+
+```text
+@finance_main 监控 [股票代码]，当价格跌破 [阈值] 或放量异常时提醒我，并说明建议动作
+```
+
+### 模板 5：市场晨会
+
+```text
+@finance_main 给我一个今天的市场综述，包含大盘、热点板块、主要风险和建议关注方向
+```
+
 ## 8. 与客户沟通时建议这样教他们
 
 如果您要把项目交付给客户，建议直接让客户按下面这条固定流程走：
@@ -297,6 +427,12 @@ openclaw agent --agent finance_main --message "分析一下平安银行" --local
 - 主 Agent bootstrap 已生效
 - 子 Agent 路由可用
 - 基础调用链正常
+
+建议再加一条“模拟执行”验收：
+
+7. 输入 `@finance_main 我想用模拟模式买入 000001.SZ，请给我一个分批买入和止损方案`
+
+如果这一步也能正常返回，说明分析到执行规划这条主业务链也打通了。
 
 ## 9. 常见问题与处理方式
 
@@ -393,6 +529,20 @@ powershell -ExecutionPolicy Bypass -File .\install-finance-opc.ps1
 - 用户配置中对应的 `finance_*` Agent 条目
 
 如果您是用脚本安装的，建议先使用安装时生成的配置备份进行恢复。
+
+### Windows 示例
+
+```powershell
+Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\domains\finance-opc
+dir $env:USERPROFILE\.openclaw\openclaw.json.finance-opc-backup.*
+```
+
+### macOS / Linux 示例
+
+```bash
+rm -rf ~/.openclaw/domains/finance-opc
+ls ~/.openclaw/openclaw.json.finance-opc-backup.*
+```
 
 ## 12. 一句话验收标准
 
