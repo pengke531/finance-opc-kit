@@ -4,6 +4,23 @@
 
 ## ⚡ 快速开始
 
+### 🚀 OpenClaw 仓库导入（推荐）
+
+将本仓库地址直接导入 OpenClaw。仓库根目录的 `openclaw.json` 已配置为
+增量导入入口，导入后会自动注册以下 Agent：
+
+- `finance_main`
+- `finance_data`
+- `finance_analysis`
+- `finance_trading`
+- `finance_monitor`
+
+导入完成后请重启 OpenClaw，并在新会话中测试：
+
+```text
+@finance_main 分析一下平安银行
+```
+
 ### 🪟 Windows用户
 
 ```powershell
@@ -31,13 +48,22 @@ chmod +x install.sh
 
 ## 📋 使用方法
 
-安装完成后重启OpenClaw，然后就可以使用：
+安装完成后，建议按下面顺序使用：
+
+1. 重启 OpenClaw 桌面端或 Gateway
+2. 新建一个会话
+3. 先测试主 Agent 是否可见
+4. 再做一次真实分析请求
+
+推荐测试语句：
 
 ```
 @finance_main 你好
 @finance_main 分析一下平安银行
 @finance_main 设置交易权限为模拟模式
 ```
+
+更完整的安装后启用流程、CLI 调用方法、客户交付验收方式，请查看 [USER_GUIDE.md](USER_GUIDE.md)。
 
 ## 🛡️ 安全特性
 

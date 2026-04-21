@@ -2,12 +2,22 @@
   "_package": {
     "name": "finance-opc-agent-pack",
     "mode": "incremental-import",
-    "version": "1.0"
+    "version": "3.0",
+    "description": "Financial Trading Multi-Agent System"
+  },
+  "skills": {
+    "load": {
+      "extraDirs": [
+        "__DOMAIN_ROOT__/workspace/skills/shared"
+      ]
+    }
   },
   "agents": {
     "defaults": {
       "workspace": "__DOMAIN_ROOT__/workspace",
-      "memorySearch": {"enabled": true},
+      "memorySearch": {
+        "enabled": true
+      },
       "subagents": {
         "maxChildrenPerAgent": 4,
         "maxSpawnDepth": 2,
@@ -17,21 +27,146 @@
     "list": [
       {
         "id": "finance_main",
-        "identity": {"name": "F01 Financial Commander", "emoji": "F01"},
+        "workspace": "__DOMAIN_ROOT__/workspace",
+        "identity": {
+          "name": "F01 Financial Commander",
+          "emoji": "F01"
+        },
         "tools": {
           "profile": "messaging",
-          "alsoAllow": ["read", "write", "sessions_spawn", "subagents", "memory_search", "memory_get", "memory_store", "web_search", "web_fetch", "browser", "agents_list", "tts", "exec"],
-          "exec": {
-            "host": "gateway",
-            "security": "full",
-            "ask": "off",
-            "safeBins": ["pwsh", "bash", "sh", "python", "python3"],
-            "strictInlineEval": true,
-            "timeoutSec": 300
-          }
+          "alsoAllow": [
+            "read",
+            "write",
+            "sessions_spawn",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser",
+            "agents_list"
+          ]
         },
         "subagents": {
-          "allowAgents": ["finance_data", "finance_analysis", "finance_trading", "finance_monitor"]
+          "allowAgents": [
+            "finance_data",
+            "finance_analysis",
+            "finance_trading",
+            "finance_monitor"
+          ]
+        }
+      },
+      {
+        "id": "finance_data",
+        "workspace": "__DOMAIN_ROOT__/agents/finance_data",
+        "identity": {
+          "name": "F02 Data Collector",
+          "emoji": "F02"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "sessions_spawn",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser",
+            "agents_list"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        }
+      },
+      {
+        "id": "finance_analysis",
+        "workspace": "__DOMAIN_ROOT__/agents/finance_analysis",
+        "identity": {
+          "name": "F03 Market Analyst",
+          "emoji": "F03"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "sessions_spawn",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser",
+            "agents_list"
+          ]
+        },
+        "subagents": {
+          "allowAgents": []
+        }
+      },
+      {
+        "id": "finance_trading",
+        "workspace": "__DOMAIN_ROOT__/agents/finance_trading",
+        "identity": {
+          "name": "F04 Trading Executor",
+          "emoji": "F04"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "sessions_spawn",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser",
+            "agents_list"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_monitor"
+          ]
+        }
+      },
+      {
+        "id": "finance_monitor",
+        "workspace": "__DOMAIN_ROOT__/agents/finance_monitor",
+        "identity": {
+          "name": "F05 Market Monitor",
+          "emoji": "F05"
+        },
+        "tools": {
+          "profile": "minimal",
+          "alsoAllow": [
+            "read",
+            "write",
+            "sessions_spawn",
+            "subagents",
+            "memory_search",
+            "memory_get",
+            "memory_store",
+            "web_search",
+            "web_fetch",
+            "browser",
+            "agents_list"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "finance_main"
+          ]
         }
       }
     ]
