@@ -4,21 +4,42 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Get-PythonCommand {
+  $candidates = @(
+    @{ Command = "py"; Args = @("-3") },
+    @{ Command = "python"; Args = @() },
+    @{ Command = "python3"; Args = @() }
+  )
+
+  foreach ($candidate in $candidates) {
+    $cmd = Get-Command $candidate.Command -ErrorAction SilentlyContinue
+    if (-not $cmd) {
+      continue
+    }
+
+    try {
+      & $candidate.Command @($candidate.Args + @("--version")) | Out-Host
+      if ($LASTEXITCODE -eq 0) {
+        return $candidate
+      }
+    }
+    catch {
+      continue
+    }
+  }
+
+  throw "[finance-opc] No working Python runtime found. Please install Python 3, or make sure one of these commands works: py -3, python, python3"
+}
+
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$python = Get-Command python -ErrorAction SilentlyContinue
-if (-not $python) {
-  $python = Get-Command python3 -ErrorAction SilentlyContinue
-}
-if (-not $python) {
-  throw "[finance-opc] python or python3 not found in PATH"
-}
+$python = Get-PythonCommand
 
 Write-Host "[finance-opc] repo root:   $repoRoot"
 Write-Host "[finance-opc] target root: $TargetRoot"
 
 Push-Location $repoRoot
 try {
-  & $python.Source ".\\workspace\\scripts\\deploy_profile.py" --target-root $TargetRoot --package-root $repoRoot
+  & $python.Command @($python.Args + @(".\\workspace\\scripts\\deploy_profile.py", "--target-root", $TargetRoot, "--package-root", $repoRoot))
   if ($LASTEXITCODE -ne 0) {
     throw "[finance-opc] deploy_profile.py failed with exit code $LASTEXITCODE. See the error output above."
   }
