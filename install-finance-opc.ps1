@@ -20,7 +20,7 @@ Push-Location $repoRoot
 try {
   & $python.Source ".\\workspace\\scripts\\deploy_profile.py" --target-root $TargetRoot --package-root $repoRoot
   if ($LASTEXITCODE -ne 0) {
-    throw "[finance-opc] deploy_profile.py failed"
+    throw "[finance-opc] deploy_profile.py failed with exit code $LASTEXITCODE. See the error output above."
   }
 
   ${env:OPENCLAW_STATE_DIR} = $TargetRoot

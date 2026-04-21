@@ -18,7 +18,10 @@ echo "[finance-opc] repo root:   $REPO_ROOT"
 echo "[finance-opc] target root: $TARGET_ROOT"
 
 cd "$REPO_ROOT"
-"$PYTHON_BIN" "./workspace/scripts/deploy_profile.py" --target-root "$TARGET_ROOT" --package-root "$REPO_ROOT"
+if ! "$PYTHON_BIN" "./workspace/scripts/deploy_profile.py" --target-root "$TARGET_ROOT" --package-root "$REPO_ROOT"; then
+  echo "[finance-opc] deploy_profile.py failed. See the error output above." >&2
+  exit 1
+fi
 
 export OPENCLAW_STATE_DIR="$TARGET_ROOT"
 export OPENCLAW_CONFIG_PATH="$TARGET_ROOT/openclaw.json"
