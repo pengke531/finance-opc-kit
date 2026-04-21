@@ -78,20 +78,20 @@ chmod +x install.sh
 
 ### Windows
 ```powershell
-# 删除Agent目录
-Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\agents\finance_*
+# 删除域目录
+Remove-Item -Recurse -Force $env:USERPROFILE\.openclaw\domains\finance-opc
 
-# 或者使用备份恢复（如果有）
-dir $env:USERPROFILE\.openclaw\openclaw.json.backup-*
+# 如需彻底恢复，使用安装时生成的备份配置恢复 openclaw.json
+dir $env:USERPROFILE\.openclaw\openclaw.json.finance-opc-backup.*
 ```
 
 ### macOS/Linux
 ```bash
-# 删除Agent目录
-rm -rf ~/.openclaw/agents/finance_*
+# 删除域目录
+rm -rf ~/.openclaw/domains/finance-opc
 
-# 或者使用备份恢复（如果有）
-ls ~/.openclaw/openclaw.json.backup-finance-*
+# 如需彻底恢复，使用安装时生成的备份配置恢复 openclaw.json
+ls ~/.openclaw/openclaw.json.finance-opc-backup.*
 ```
 
 ## 📚 文档
