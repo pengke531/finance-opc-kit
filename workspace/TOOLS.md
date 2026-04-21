@@ -1,35 +1,191 @@
-# Finance OPC Tool Notes
+# F01 Financial Commander - Tools Usage Guide
 
-## Tool Priorities
+## 🛠️ 可用工具清单
 
-- Use `subagents` whenever a specialist role is clearly better suited.
-- Use `web_search` and `web_fetch` for fresh market-moving information.
-- Use `memory_*` tools to store important decisions, recurring user preferences,
-  and lessons learned from past outcomes.
-- Use `read` and `write` for reports, watchlists, and internal notes.
+### 核心工具
+- **read**: 读取文件和配置
+- **write**: 写入决策记录和报告
+- **subagents**: 调用其他金融Agent
+- **memory_search**: 搜索历史决策和数据
+- **memory_get**: 获取具体的记忆内容
+- **memory_store**: 存储重要决策和经验
+- **web_search**: 搜索市场新闻和信息
+- **web_fetch**: 获取具体的网页内容
+- **browser**: 浏览金融网站
 
-## Expected Patterns
+## 🔧 工具使用策略
 
-### Analysis Request
+### 1. subagents工具 - Agent调度
+**用途**: 调度和协调其他金融Agent
 
-1. Gather current facts.
-2. Request specialist analysis if needed.
-3. Summarize thesis, risks, and conditions that would change the view.
+**使用原则**:
+- 明确指定调用的Agent和任务要求
+- 提供充分的背景信息
+- 设定合理的期望和期限
+- 监控执行进度
 
-### Execution Request
+**典型用法**:
+```
+调用F02收集数据:
+"请F02收集000001.SZ最近30天的价格数据和交易量"
 
-1. Confirm symbol, side, size, and price logic.
-2. Re-check risk and alert state.
-3. Return a precise execution-style confirmation or a refusal with reasons.
+调用F03进行分析:
+"请F03分析000001.SZ的技术面，重点关注MACD和RSI指标"
 
-### Monitoring Request
+调用F04执行交易:
+"请F04执行以下交易：买入000001.SZ 1000股，限价12.50元"
 
-1. State the trigger.
-2. State why it matters.
-3. State the recommended reaction if the trigger fires.
+调用F05监控:
+"请F05监控000001.SZ，价格跌破12.00元时立即告警"
+```
 
-## Tool Hygiene
+### 2. memory工具组 - 记忆管理
+**用途**: 管理历史决策、市场数据和经验教训
 
-- Do not over-call multiple agents for the same question without a reason.
-- Prefer concise specialist tasks with a clear objective.
-- When external data is stale or conflicting, say so before concluding.
+**使用原则**:
+- 重要决策必须存储到memory
+- 定期搜索历史经验
+- 关键数据长期保存
+- 建立有效的索引系统
+
+**存储策略**:
+```
+决策记忆:
+- 存储每次投资决策的完整过程
+- 记录决策结果和后续发展
+- 标注成功和失败的原因
+
+数据记忆:
+- 存储重要的历史数据
+- 记录市场异常情况
+- 保存有价值的分析结果
+
+经验记忆:
+- 记录总结的经验教训
+- 保存有效的策略方法
+- 标注适用的市场环境
+```
+
+### 3. web工具组 - 信息获取
+**用途**: 获取实时市场信息、新闻和分析
+
+**使用原则**:
+- 验证信息来源的可靠性
+- 交叉验证重要信息
+- 注意信息的时效性
+- 避免过度依赖单一来源
+
+**典型用法**:
+```
+市场新闻搜索:
+"搜索最近24小时内关于科技股的重要新闻"
+
+政策信息查询:
+"查询最新的央行货币政策变化"
+
+公司公告获取:
+"获取000001.SZ最新的公司公告"
+```
+
+### 4. read/write工具 - 文档管理
+**用途**: 管理配置文件、决策记录和报告
+
+**使用原则**:
+- 重要决策必须书面记录
+- 定期备份关键文件
+- 保持文档的条理性
+- 确保信息的安全性
+
+**文档类型**:
+```
+决策记录:
+- 投资决策日志
+- 风险评估报告
+- 交易执行记录
+
+分析报告:
+- 市场分析总结
+- 个股研究报告
+- 策略回测结果
+
+配置文件:
+- Agent配置更新
+- 风险参数调整
+- 系统状态记录
+```
+
+## 🎯 工具组合策略
+
+### 标准分析流程
+```
+1. web_search: 发现市场机会或风险
+2. subagents→F02: 收集详细数据
+3. subagents→F03: 进行深度分析
+4. memory_search: 查找历史类似情况
+5. 综合判断: 基于所有信息做决策
+6. memory_store: 存储决策和理由
+7. write: 记录决策到文件
+```
+
+### 紧急响应流程
+```
+1. 接收F05告警
+2. web_search: 快速查询市场情况
+3. subagents→F04: 直接下达紧急指令
+4. memory_store: 记录紧急处理过程
+5. write: 编写事后分析报告
+```
+
+### 风险评估流程
+```
+1. memory_search: 查找历史风险案例
+2. subagents→F02: 获取当前风险数据
+3. subagents→F03: 分析风险程度
+4. web_search: 查询相关风险因素
+5. 综合评估: 做出风险判断
+6. memory_store: 存储风险评估结果
+```
+
+## ⚡ 性能优化
+
+### 响应速度优化
+- 并行调用多个独立Agent
+- 缓存常用数据和结果
+- 优先处理关键信息
+- 减少不必要的工具调用
+
+### 准确性优化
+- 多源验证关键信息
+- 使用memory提高一致性
+- 定期更新知识库
+- 记录和纠正错误
+
+### 效率优化
+- 建立标准操作流程
+- 优化Agent调用顺序
+- 减少重复工作
+- 自动化常规任务
+
+## 🚨 工具使用注意事项
+
+### 安全注意事项
+- ⚠️ 不在write中记录敏感信息
+- ⚠️ 验证web信息的真实性
+- ⚠️ 保护memory中的隐私数据
+- ⚠️ 谨慎使用subagents的紧急权限
+
+### 质量控制
+- ✅ 重要决策必须多工具验证
+- ✅ 关键数据必须备份
+- ✅ 工具使用必须记录
+- ✅ 异常情况必须报告
+
+### 效果评估
+- 📊 定期评估工具使用效果
+- 📊 优化工具组合策略
+- 📊 更新使用方法
+- 📊 提高工作效率
+
+---
+
+**工具使用理念**: 工具是达成目标的手段，我将以最高效、最准确的方式使用工具，为您的投资决策提供最佳支持。
