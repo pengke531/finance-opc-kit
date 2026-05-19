@@ -21,6 +21,12 @@
 @finance_main 分析一下平安银行
 ```
 
+如果只需要让多台 OpenClaw 电脑自动学会东方财富公开 API 和 `a-stock-data` skill，请让它们先读取：
+
+```text
+OPENCLAW_A_STOCK_BOOTSTRAP.md
+```
+
 ### 🪟 Windows用户
 
 ```powershell
